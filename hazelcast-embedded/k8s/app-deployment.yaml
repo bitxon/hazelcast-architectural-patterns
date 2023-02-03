@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-hz-embedded
+  labels:
+    app: app-hz-embedded
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-hz-embedded
+  template:
+    metadata:
+      labels:
+        app: app-hz-embedded
+    spec:
+      containers:
+        - image: bitxon/app-hz-embedded
+          name: app-hz-embedded
+          ports:
+            - containerPort: 8080
+            - containerPort: 5701
