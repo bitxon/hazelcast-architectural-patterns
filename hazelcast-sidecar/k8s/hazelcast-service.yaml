@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hazelcast
+spec:
+  type: ClusterIP
+  selector:
+    app: app-hz-sidecar
+  ports:
+    - name: hazelcast
+      port: 5701

@@ -31,3 +31,7 @@ jobs:
         run: mvn clean install
         working-directory: hazelcast-embedded
 
+      - name: Build hazelcast-sidecar
+        run: mvn clean install
+        working-directory: hazelcast-sidecar
+
