@@ -21,3 +21,10 @@ spec:
           image: hazelcast/hazelcast
           ports:
             - containerPort: 5701
+          env:
+            - name: HZ_NETWORK_JOIN_MULTICAST_ENABLED
+              value: "false"
+            - name: HZ_NETWORK_JOIN_KUBERNETES_ENABLED
+              value: "true"
+            - name: HZ_NETWORK_JOIN_KUBERNETES_SERVICENAME
+              value: "hazelcast-service"

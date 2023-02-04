@@ -16,8 +16,8 @@ docker push bitxon/app-hz-sidecar:latest
 ```bash
 # Apply hazelcast RBAC
 kubectl apply -f k8s/hazelcast-rbac.yaml
-# Expose hazelcast(5701) via headless service for discovery ## TODO why we do NOT need it ???
-#kubectl apply -f k8s/hazelcast-service.yaml
+# Expose hazelcast(5701) via headless service for discovery
+kubectl apply -f k8s/hazelcast-service.yaml
 # Create application deployment
 kubectl apply -f k8s/app-deployment.yaml
 # Expose application(8080)
