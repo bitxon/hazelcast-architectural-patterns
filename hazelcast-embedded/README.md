@@ -14,25 +14,31 @@ docker push bitxon/app-hz-embedded:latest
 
 3. Deploy to Kubernetes
 ```bash
-# Apply RBAC and expose(5701) via headless service for discovery
+# Apply hazelcast RBAC
 kubectl apply -f k8s/hazelcast-rbac.yaml
+# Expose hazelcast(5701) via headless service for discovery
 kubectl apply -f k8s/hazelcast-service.yaml
-# Create app deployment and expose(8080) via service
+# Create application deployment
 kubectl apply -f k8s/app-deployment.yaml
+# Expose application(8080)
 kubectl apply -f k8s/app-service.yaml
+# Expose(8080) service to local machine
+kubectl port-forward service/application-service 8080:8080
 ```
 
 
 # Test your setup
 ```bash
-# Put new Value { 1 : AAAAA }
-curl --request PUT 'http://localhost:8080/cache/1/value/AAAAA'
+# Put Value
+curl --request PUT 'http://localhost:8080/cache/key1/valueA'
 # Get Value
-curl --request GET 'http://localhost:8080/cache/1'
-# Get Value with Lock (wait 10 seconds)
-curl --request GET 'http://localhost:8080/locked-cache/1'
+curl --request GET 'http://localhost:8080/cache/key1'
+# Put Value to Locked cache (5 seconds long)
+curl --request PUT 'http://localhost:8080/fenced-lock-cache/key1/valueB'
+# Get Value from Locked cache (max wait 6 seconds)
+curl --request GET 'http://localhost:8080/fenced-lock-cache/key1'
 # Scale application
-kubectl scale deployment app-hz-embedded --replicas=5
+kubectl scale deployment application-deployment --replicas=5
 ```
 
 # Useful links
