@@ -2,6 +2,7 @@ package bitxon.hz;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import static bitxon.hz.HzController.LOCKED_CACHE;
+import static bitxon.hz.HzController.MAIN_CACHE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,11 +26,10 @@ import java.util.stream.Stream;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HzApplicationTests {
 
-	private static final String CACHE_NAME = "mainCache";
-
 	private static final String GET_PATH = "/cache/{key}";
-	private static final String PUT_PATH = "/cache/{key}/value/{value}";
-	private static final String GET_LOCK_PATH = "/locked-cache/{key}";
+	private static final String PUT_PATH = "/cache/{key}/{value}";
+	private static final String GET_LOCK_PATH = "/fenced-lock-cache/{key}";
+	private static final String PUT_LOCK_PATH = "/fenced-lock-cache/{key}/{value}";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -37,6 +39,11 @@ public class HzApplicationTests {
 	@BeforeAll
 	public static void beforeAll() {
 		Hazelcast.newHazelcastInstance();
+	}
+
+	@AfterAll
+	public static void afterAll() {
+		Hazelcast.shutdownAll();
 	}
 
 	@Test
@@ -72,28 +79,63 @@ public class HzApplicationTests {
 	@Test
 	public void getWithLock() {
 		//given
-		getCache().put("keyWithLock", "lockedValue");
+		getLockedCache().put("keyWithLock", "lockedValue");
 
 		//when
-		var future1 = CompletableFuture.supplyAsync(() ->
+		var get1 = CompletableFuture.supplyAsync(() ->
 			webTestClient.get().uri(GET_LOCK_PATH, "keyWithLock").exchange());
-		var future2 = CompletableFuture.supplyAsync(() ->
+		var get2 = CompletableFuture.supplyAsync(() ->
 			webTestClient.get().uri(GET_LOCK_PATH, "keyWithLock").exchange());
-		var future3 = CompletableFuture.supplyAsync(() ->
+		var get3 = CompletableFuture.supplyAsync(() ->
 			webTestClient.get().uri(GET_LOCK_PATH, "keyWithLock").exchange());
 
 		//then
-		var resultStatuses = Stream.of(future1, future2, future3)
+		var resultStatuses = Stream.of(get1, get2, get3)
 			.map(CompletableFuture::join)
 			.map(x -> x.returnResult(String.class).getStatus().value())
 			.toList();
 		assertThat(resultStatuses)
-			.as("One should succeed other should failed with timeout")
-			.containsExactlyInAnyOrder(200, 408, 408);
+			.containsExactlyInAnyOrder(200, 200, 200);
 
 	}
 
+	@Test
+	public void putAndGetWithLock() {
+		//given
+		getLockedCache().put("keyWithLock2", "lockedValue2");
+
+		//when
+		var get1 = CompletableFuture.supplyAsync(() ->
+			webTestClient.get().uri(GET_LOCK_PATH, "keyWithLock2").exchange());
+		var get2 = CompletableFuture.supplyAsync(() ->
+			webTestClient.get().uri(GET_LOCK_PATH, "keyWithLock2").exchange());
+		var put1 = CompletableFuture.supplyAsync(() ->
+			webTestClient.put().uri(PUT_LOCK_PATH, "keyWithLock2", "RaNd0M").exchange());
+		var get3 = CompletableFuture.supplyAsync(() ->
+			webTestClient.get().uri(GET_LOCK_PATH, "keyWithLock2").exchange());
+
+		//then
+		var resultStatuses = Stream.of(get1, put1, get2, get3)
+			.map(CompletableFuture::join)
+			.map(x -> x.returnResult(String.class).getStatus().value())
+			.toList();
+		assertThat(resultStatuses)
+			.containsExactlyInAnyOrder(200, 200, 200, 200);
+
+		var resultBodies = Stream.of(get1, put1, get2, get3)
+			.map(CompletableFuture::join)
+			.map(x -> x.returnResult(String.class).getResponseBody().blockFirst())
+			.toList();
+		assertThat(resultBodies)
+			.containsAnyOf("lockedValue2", "RaNd0M");
+	}
+
+
 	private ConcurrentMap<String, String> getCache() {
-		return hazelcastInstance.getMap(CACHE_NAME);
+		return hazelcastInstance.getMap(MAIN_CACHE);
+	}
+
+	private ConcurrentMap<String, String> getLockedCache() {
+		return hazelcastInstance.getMap(LOCKED_CACHE);
 	}
 }

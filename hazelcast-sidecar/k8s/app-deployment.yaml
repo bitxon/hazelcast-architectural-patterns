@@ -1,25 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-hz-sidecar
-  labels:
-    app: app-hz-sidecar
+  name: application-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: app-hz-sidecar
+      app: application
   template:
     metadata:
       labels:
-        app: app-hz-sidecar
+        app: application
     spec:
       containers:
-        - image: bitxon/app-hz-sidecar
-          name: app-hz-sidecar
+        - name: application
+          image: bitxon/app-hz-sidecar
           ports:
             - containerPort: 8080
-        - image: hazelcast/hazelcast
-          name: hazelcast
+        - name: hazelcast
+          image: hazelcast/hazelcast
           ports:
             - containerPort: 5701
