@@ -18,6 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class HzController {
 
+    public static final String MAIN_CACHE = "mainCache";
+    public static final String LOCKED_CACHE = "lockedCache";
+
     @Autowired
     private HazelcastInstance hazelcastInstance;
 
@@ -26,20 +29,39 @@ public class HzController {
         return getCache().get(key);
     }
 
-    @PutMapping("/cache/{key}/value/{value}")
-    public void put(@PathVariable("key") String key, @PathVariable("value") String value) {
+    @PutMapping("/cache/{key}/{value}")
+    public String put(@PathVariable("key") String key, @PathVariable("value") String value) {
         getCache().put(key, value);
+        return value;
     }
 
     @SneakyThrows
-    @GetMapping("/locked-cache/{key}")
+    @GetMapping("/fenced-lock-cache/{key}")
     public String getWithLock(@PathVariable("key") String key) {
         var lock = getLock(key);
 
-        if (lock.tryLock(5, SECONDS)) {
+        if (lock.tryLock(6, SECONDS)) {
             try {
-                SECONDS.sleep(10); // pretend that this is long operation
-                return getCache().get(key);
+                return getLockedCache().get(key);
+            } finally {
+                lock.unlock();
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.REQUEST_TIMEOUT, "Lock not acquired");
+        }
+    }
+
+    @SneakyThrows
+    @PutMapping("/fenced-lock-cache/{key}/{value}")
+    public String putWithLock(@PathVariable("key") String key, @PathVariable("value") String value) {
+        var lock = getLock(key);
+
+        if (lock.tryLock(6, SECONDS)) {
+            try {
+                getLockedCache().remove(key);
+                SECONDS.sleep(5); // pretend that this is long operation
+                getLockedCache().put(key, value);
+                return value;
             } finally {
                 lock.unlock();
             }
@@ -50,7 +72,11 @@ public class HzController {
 
 
     private ConcurrentMap<String, String> getCache() {
-        return hazelcastInstance.getMap("mainCache");
+        return hazelcastInstance.getMap(MAIN_CACHE);
+    }
+
+    private ConcurrentMap<String, String> getLockedCache() {
+        return hazelcastInstance.getMap(LOCKED_CACHE);
     }
 
     private FencedLock getLock(String key) {
