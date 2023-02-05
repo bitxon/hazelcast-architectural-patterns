@@ -18,8 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class HzController {
 
-    public static final String MAIN_CACHE = "mainCache";
-    public static final String LOCKED_CACHE = "lockedCache";
+    public static final String MAIN_CACHE = "main-cache";
+    public static final String LOCKED_CACHE = "locked-cache";
 
     @Autowired
     private HazelcastInstance hazelcastInstance;

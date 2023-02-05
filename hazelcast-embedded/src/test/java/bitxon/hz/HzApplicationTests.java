@@ -11,7 +11,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static bitxon.hz.HzController.LOCKED_CACHE;
 import static bitxon.hz.HzController.MAIN_CACHE;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.concurrent.CompletableFuture;
@@ -47,7 +49,28 @@ public class HzApplicationTests {
         //then
         responseSpec
             .expectStatus().is2xxSuccessful()
-            .expectBody().equals("AAAAA");
+            .expectBody(String.class).isEqualTo("AAAAA");
+    }
+
+    @Test
+    public void getValueAfterExpiration() {
+        //given
+        getCache().put("expiredKey1", "expiredValue");
+
+
+        await().pollDelay(5, SECONDS).atMost(8, SECONDS).untilAsserted(() -> {
+            //when
+            var responseSpec = webTestClient
+                .get()
+                .uri(GET_PATH, "expiredKey1")
+                .exchange();
+
+            //then
+            responseSpec
+                .expectStatus().is2xxSuccessful()
+                .expectBody(String.class).isEqualTo(null);
+        });
+
     }
 
     @Test

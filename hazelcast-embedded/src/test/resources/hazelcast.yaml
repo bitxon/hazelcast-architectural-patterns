@@ -4,3 +4,8 @@ hazelcast:
     join:
       multicast:
         enabled: true
+  map:
+    default:
+      time-to-live-seconds: 20
+    mainCache:
+      time-to-live-seconds: 5
