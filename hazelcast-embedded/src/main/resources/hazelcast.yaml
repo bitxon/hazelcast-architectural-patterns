@@ -10,5 +10,5 @@ hazelcast:
   map:
     default:
       time-to-live-seconds: 20
-    mainCache:
+    main-cache:
       time-to-live-seconds: 5
