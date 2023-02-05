@@ -1,0 +1,5 @@
+hazelcast-client:
+  cluster-name: hzcluster
+  network:
+    cluster-members:
+      - hazelcast-service.default.svc.cluster.local:5701

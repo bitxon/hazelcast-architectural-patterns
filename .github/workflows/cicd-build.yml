@@ -35,3 +35,6 @@ jobs:
         run: mvn clean install
         working-directory: hazelcast-sidecar
 
+      - name: Build hazelcast-client-server
+        run: mvn clean install
+        working-directory: hazelcast-client-server
