@@ -1,4 +1,5 @@
 hazelcast-client:
+  cluster-name: hzcluster
   network:
     cluster-members:
       - localhost:5701
