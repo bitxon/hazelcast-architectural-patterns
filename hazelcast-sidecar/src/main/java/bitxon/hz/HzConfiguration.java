@@ -2,7 +2,6 @@ package bitxon.hz;
 
 
 import com.hazelcast.client.HazelcastClient;
-import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +11,7 @@ public class HzConfiguration {
 
     @Bean
     public HazelcastInstance hazelcastInstance() {
-        var conf = new ClientConfig();
-        conf.getNetworkConfig().addAddress("localhost:5701");
-        return HazelcastClient.newHazelcastClient(conf);
+        // By default, it will try to load configuration from hazelcast-client.yaml or hazelcast-client.xml
+        return HazelcastClient.newHazelcastClient();
     }
 }
