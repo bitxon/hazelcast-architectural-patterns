@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: application
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      containers:
+        - name: application
+          image: bitxon/app-hz-sidecar-js
+          ports:
+            - containerPort: 8080
+        - name: hazelcast
+          image: hazelcast/hazelcast
+          ports:
+            - containerPort: 5701
+          env:
+            - name: JAVA_OPTS
+              value: "-Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.yaml"
+          volumeMounts:
+            - name: hazelcast-config-volume
+              mountPath: /opt/hazelcast/config_ext
+      volumes:
+        - name: hazelcast-config-volume
+          configMap:
+            name: hazelcast-configmap
