@@ -28,3 +28,7 @@ spec:
               value: "true"
             - name: HZ_NETWORK_JOIN_KUBERNETES_SERVICENAME
               value: "hazelcast-service"
+            - name: HZ_MAP_DEFAULT_TIMETOLIVESECONDS
+              value: "20"
+            - name: HZ_MAP_MAINCACHE_TIMETOLIVESECONDS # TODO why not working "main-cache"
+              value: "5"
