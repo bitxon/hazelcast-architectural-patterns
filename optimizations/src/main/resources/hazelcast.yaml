@@ -1,0 +1,10 @@
+hazelcast:
+  serialization:
+    global-serializer:
+      override-java-serialization: true
+      class-name: bitxon.hz.serializer.GlobalKryoStreamSerializer
+#    serializers:
+#      - type-class: bitxon.hz.model.kryo.User
+#        class-name: bitxon.hz.serializer.UserKryoStreamSerializer
+#      - type-class: bitxon.hz.model.objectmapper.User
+#        class-name: bitxon.hz.serializer.UserObjectMapperStreamSerializer
