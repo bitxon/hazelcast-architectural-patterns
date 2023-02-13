@@ -1,5 +1,6 @@
 package bitxon.hz;
 
+import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import org.junit.jupiter.api.AfterAll;
@@ -43,6 +44,7 @@ public class HzApplicationTests {
 
 	@AfterAll
 	public static void afterAll() {
+		HazelcastClient.shutdownAll();
 		Hazelcast.shutdownAll();
 	}
 
