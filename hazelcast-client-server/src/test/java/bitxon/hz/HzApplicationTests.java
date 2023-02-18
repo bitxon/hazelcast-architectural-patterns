@@ -44,7 +44,7 @@ public class HzApplicationTests {
 
 	@AfterAll
 	public static void afterAll() {
-		HazelcastClient.shutdownAll();
+		HazelcastClient.shutdownAll(); // Optional, this just speedup test teardown
 		Hazelcast.shutdownAll();
 	}
 

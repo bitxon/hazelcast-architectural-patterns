@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HzConfiguration {
 
-    @Bean
+    @Bean // Spring automatically detects method shutdown() as destroyMethod
     public HazelcastInstance hazelcastInstance() {
         // By default, it will try to load configuration from hazelcast-client.yaml or hazelcast-client.xml
         return HazelcastClient.newHazelcastClient();

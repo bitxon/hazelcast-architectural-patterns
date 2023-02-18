@@ -18,7 +18,7 @@ docker push bitxon/app-hz-sidecar:latest
 kubectl apply -f k8s/hazelcast-rbac.yaml
 # Apply hazelcast configmap
 kubectl apply -f k8s/hazelcast-configmap.yaml
-# Expose hazelcast(5701) via headless service for discovery
+# Expose hazelcast(5701) for discovery
 kubectl apply -f k8s/hazelcast-service.yaml
 # Create application deployment
 kubectl apply -f k8s/app-deployment.yaml

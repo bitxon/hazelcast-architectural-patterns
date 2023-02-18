@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - 'main'
-      - 'feature/**'
   pull_request:
     branches:
       - 'main'
 
 jobs:
-
   build:
     runs-on: ubuntu-20.04
     permissions:
@@ -28,13 +26,13 @@ jobs:
           distribution: 'adopt'
 
       - name: Build hazelcast-embedded
-        run: mvn clean install
+        run: mvn clean verify -B
         working-directory: hazelcast-embedded
 
       - name: Build hazelcast-sidecar
-        run: mvn clean install
+        run: mvn clean verify -B
         working-directory: hazelcast-sidecar
 
       - name: Build hazelcast-client-server
-        run: mvn clean install
+        run: mvn clean verify -B
         working-directory: hazelcast-client-server
