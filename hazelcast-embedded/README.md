@@ -16,7 +16,7 @@ docker push bitxon/app-hz-embedded:latest
 ```bash
 # Apply hazelcast RBAC
 kubectl apply -f k8s/hazelcast-rbac.yaml
-# Expose hazelcast(5701) via headless service for discovery
+# Expose hazelcast(5701) for discovery
 kubectl apply -f k8s/hazelcast-service.yaml
 # Create application deployment
 kubectl apply -f k8s/app-deployment.yaml

@@ -58,7 +58,7 @@ public class HzApplicationTests {
         getCache().put("expiredKey1", "expiredValue");
 
 
-        await().pollDelay(5, SECONDS).atMost(8, SECONDS).untilAsserted(() -> {
+        await().atMost(8, SECONDS).untilAsserted(() -> {
             //when
             var responseSpec = webTestClient
                 .get()
