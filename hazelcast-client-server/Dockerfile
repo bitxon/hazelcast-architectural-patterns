@@ -1,4 +1,12 @@
+FROM maven:3.8.3-openjdk-17 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn -B dependency:resolve dependency:resolve-plugins
+COPY src/ /app/src/
+RUN mvn -B clean package -DskipTests
+
 FROM openjdk:17.0.1-jdk-slim
-COPY target/*.jar app.jar
+WORKDIR /app
+COPY --from=build /app/target/*.jar /app/app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
 EXPOSE 8080/tcp
