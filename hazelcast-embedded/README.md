@@ -1,18 +1,30 @@
 # Hazelcast Embedded Pattern
 
-1. Build Java app
+---
+# Build & Run
+
+## Skaffold
+<details>
+  <summary><b>See Details</b></summary>
+
+Execute Skaffold in dev mode
 ```bash
-mvn clean install
+skaffold dev
 ```
 
-2. Build Docker image and Push
+</details>
+
+## Kubectl
+<details>
+  <summary><b>See Details</b></summary>
+
+1. Build Docker image and Push
 ```bash
-# Don't forget to customize image name
 docker build -t bitxon/app-hz-embedded:latest .
 docker push bitxon/app-hz-embedded:latest
 ```
 
-3. Deploy to Kubernetes
+2. Deploy to Kubernetes
 ```bash
 # Apply hazelcast RBAC
 kubectl apply -f k8s/hazelcast-rbac.yaml
@@ -22,11 +34,25 @@ kubectl apply -f k8s/hazelcast-service.yaml
 kubectl apply -f k8s/app-deployment.yaml
 # Expose application(8080)
 kubectl apply -f k8s/app-service.yaml
+```
+
+3. Expose service port to local machine
+```bash
 # Expose(8080) service to local machine
 kubectl port-forward service/application-service 8080:8080
 ```
 
+Cleanup
+```bash
+kubectl delete -f k8s/app-service.yaml
+kubectl delete -f k8s/app-deployment.yaml
+kubectl delete -f k8s/hazelcast-service.yaml
+kubectl delete -f k8s/hazelcast-rbac.yaml
+```
 
+</details>
+
+---
 # Test your setup
 ```bash
 # Put Value
@@ -41,8 +67,8 @@ curl --request GET 'http://localhost:8080/fenced-lock-cache/key1'
 kubectl scale deployment application-deployment --replicas=5
 ```
 
+---
 # Useful links
-
 - [Latest RBAC](https://raw.githubusercontent.com/hazelcast/hazelcast-kubernetes/master/rbac.yaml)
 - [Hazelcast Kubernetes Discovery](https://github.com/hazelcast/hazelcast-kubernetes)
 - [Full Example of hazelcast.yaml](https://github.com/hazelcast/hazelcast/blob/master/hazelcast/src/main/resources/hazelcast-full-example.yaml)
