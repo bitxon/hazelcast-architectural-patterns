@@ -1,4 +1,7 @@
 hazelcast:
+  config-replacers:
+    replacers:
+      - class-name: bitxon.hz.EnvironmentConfigReplacer
   cluster-name: hzcluster
   network:
     join:
@@ -6,7 +9,8 @@ hazelcast:
         enabled: false
       kubernetes:
         enabled: true
-        service-name: hazelcast-service #Refers to k8s service that expose port 5701 to cluster, null == default
+        namespace: $env{NAMESPACE}
+        service-name: $env{DISCOVERY_SERVICE_NAME}
   map:
     default:
       time-to-live-seconds: 20

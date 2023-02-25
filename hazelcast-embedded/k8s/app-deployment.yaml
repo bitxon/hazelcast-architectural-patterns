@@ -18,3 +18,8 @@ spec:
           ports:
             - containerPort: 8080
             - containerPort: 5701
+          env:
+            - name: DISCOVERY_SERVICE_NAME
+              value: hazelcast-service
+            - name: NAMESPACE
+              value: default
