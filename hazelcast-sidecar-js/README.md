@@ -1,9 +1,26 @@
 # Hazelcast Sidecar Pattern (JS)
 
+---
+
+## Build & Run
+
+<details>
+  <summary><b>Skaffold</b></summary>
+
+Execute Skaffold in dev mode
+
+```bash
+skaffold dev
+```
+
+</details>
+
+<details>
+  <summary><b>Kubectl</b></summary>
+
 1. Build Docker image and Push
 
 ```bash
-# Don't forget to customize image name
 docker build -t bitxon/app-hz-sidecar-js:latest .
 docker push bitxon/app-hz-sidecar-js:latest
 ```
@@ -13,19 +30,37 @@ docker push bitxon/app-hz-sidecar-js:latest
 ```bash
 # Apply hazelcast RBAC
 kubectl apply -f k8s/hazelcast-rbac.yaml
-# Apply hazelcast configmap
+# Create hazelcast configmap
 kubectl apply -f k8s/hazelcast-configmap.yaml
-# Expose hazelcast(5701) via headless service for discovery
+# Expose hazelcast(5701) for discovery
 kubectl apply -f k8s/hazelcast-service.yaml
 # Create application deployment
 kubectl apply -f k8s/app-deployment.yaml
 # Expose application(8080)
 kubectl apply -f k8s/app-service.yaml
-# Expose(8080) service to local machine
+```
+
+3. Expose service port to local machine
+
+```bash
 kubectl port-forward service/application-service 8080:8080
 ```
 
-# Test your setup
+Cleanup
+
+```bash
+kubectl delete -f k8s/app-service.yaml
+kubectl delete -f k8s/app-deployment.yaml
+kubectl delete -f k8s/hazelcast-service.yaml
+kubectl delete -f k8s/hazelcast-configmap.yaml
+kubectl delete -f k8s/hazelcast-rbac.yaml
+```
+
+</details>
+
+---
+
+## Test your setup
 
 ```bash
 # Put Value
@@ -40,7 +75,9 @@ curl --request GET 'http://localhost:8080/fenced-lock-cache/key1'
 kubectl scale deployment application-deployment --replicas=5
 ```
 
-# Useful links
+---
+
+## Useful links
 
 - [Hazelcast JS client](https://github.com/hazelcast/hazelcast-nodejs-client/blob/master/DOCUMENTATION.md)
 - [Latest RBAC](https://raw.githubusercontent.com/hazelcast/hazelcast-kubernetes/master/rbac.yaml)

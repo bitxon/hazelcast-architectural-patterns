@@ -1,0 +1,21 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: hazelcast-sidecar-js
+build:
+  artifacts:
+    - image: bitxon/app-hz-sidecar-js
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  rawYaml:
+    - k8s/hazelcast-rbac.yaml
+    - k8s/hazelcast-configmap.yaml
+    - k8s/hazelcast-service.yaml
+    - k8s/app-deployment.yaml
+    - k8s/app-service.yaml
+portForward:
+  - resourceType: service
+    resourceName: application-service
+    port: 8080
+    localPort: 8080
