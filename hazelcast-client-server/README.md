@@ -1,10 +1,9 @@
 # Hazelcast Client-Server Pattern
 ---
-# Build & Run
+## Build & Run
 
-## Skaffold
 <details>
-  <summary><b>See Details</b></summary>
+  <summary><b>Skaffold</b></summary>
 
 Execute Skaffold in dev mode
 ```bash
@@ -13,9 +12,8 @@ skaffold dev
 
 </details>
 
-## Kubectl
 <details>
-  <summary><b>See Details</b></summary>
+  <summary><b>Kubectl</b></summary>
 
 1. Build Docker image and Push
 ```bash
@@ -57,7 +55,7 @@ kubectl delete -f k8s/hazelcast-rbac.yaml
 </details>
 
 ---
-# Test your setup
+## Test your setup
 ```bash
 # Put Value
 curl --request PUT 'http://localhost:8080/cache/key1/valueA'
@@ -72,7 +70,7 @@ kubectl scale deployment application-deployment --replicas=5
 ```
 
 ---
-# Useful links
+## Useful links
 - [Latest RBAC](https://raw.githubusercontent.com/hazelcast/hazelcast-kubernetes/master/rbac.yaml)
 - [Hazelcast Kubernetes Discovery](https://github.com/hazelcast/hazelcast-kubernetes)
 - [How to use System Properties](https://docs.hazelcast.com/hazelcast/5.2/configuration/configuring-with-system-properties)
