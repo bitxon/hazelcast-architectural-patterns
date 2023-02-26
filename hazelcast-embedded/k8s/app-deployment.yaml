@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: application-deployment
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       app: application
@@ -18,3 +18,24 @@ spec:
           ports:
             - containerPort: 8080
             - containerPort: 5701
+          startupProbe:
+            initialDelaySeconds: 10 # 'initial check' will be after 10 seconds (Not counted as failure)
+            periodSeconds: 5        # first check will be after 10 + 5 = 15, second check 10 + 5 + 5 = 20
+            failureThreshold: 8     # last check will be after 10 + (5 * 8) = 50
+            httpGet:
+              path: /actuator/health
+              port: 8080
+          livenessProbe:
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            failureThreshold: 2
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+          readinessProbe:
+            initialDelaySeconds: 0
+            failureThreshold: 1
+            periodSeconds: 3
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080

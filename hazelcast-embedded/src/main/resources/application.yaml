@@ -1,0 +1,13 @@
+management:
+  endpoints.web.exposure.include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+      group:
+        readiness:
+          include: hazelcast
+        liveness:
+          include: hazelcast
+  health:
+    probes:
+      enabled: true # enable probes on local env (by default they enable on k8s env only)

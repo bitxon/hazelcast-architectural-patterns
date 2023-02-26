@@ -13,8 +13,3 @@ manifests:
     - k8s/hazelcast-service.yaml
     - k8s/app-deployment.yaml
     - k8s/app-service.yaml
-portForward:
-  - resourceType: service
-    resourceName: application-service
-    port: 8080
-    localPort: 8080

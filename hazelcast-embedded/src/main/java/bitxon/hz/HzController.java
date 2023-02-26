@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.cp.lock.FencedLock;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
+@Slf4j
 @RestController
 public class HzController {
 
@@ -38,13 +39,16 @@ public class HzController {
     @SneakyThrows
     @GetMapping("/fenced-lock-cache/{key}")
     public String getWithLock(@PathVariable("key") String key) {
+        log.info("GET {}", key);
         var lock = getLock(key);
 
         if (lock.tryLock(6, SECONDS)) {
+            log.info("LOCK '{}' read", key);
             try {
                 return getLockedCache().get(key);
             } finally {
                 lock.unlock();
+                log.info("UNLOCK '{}' read", key);
             }
         } else {
             throw new ResponseStatusException(HttpStatus.REQUEST_TIMEOUT, "Lock not acquired");
@@ -54,16 +58,20 @@ public class HzController {
     @SneakyThrows
     @PutMapping("/fenced-lock-cache/{key}/{value}")
     public String putWithLock(@PathVariable("key") String key, @PathVariable("value") String value) {
+        log.info("PUT {}:{}", key, value);
         var lock = getLock(key);
 
         if (lock.tryLock(6, SECONDS)) {
+            log.info("LOCK '{}' write", key);
             try {
-                getLockedCache().remove(key);
+                getLockedCache().put(key, "TEMP");
                 SECONDS.sleep(5); // pretend that this is long operation
                 getLockedCache().put(key, value);
                 return value;
             } finally {
                 lock.unlock();
+                log.info("UNLOCK '{}' write", key);
+
             }
         } else {
             throw new ResponseStatusException(HttpStatus.REQUEST_TIMEOUT, "Lock not acquired");
