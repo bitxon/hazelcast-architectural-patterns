@@ -5,7 +5,7 @@ management:
       show-details: ALWAYS
       group:
         readiness:
-          include: hazelcast
+          include:
         liveness:
           include: hazelcast
   health:

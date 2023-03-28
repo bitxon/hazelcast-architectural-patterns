@@ -8,7 +8,7 @@
 
 Execute Skaffold in dev mode
 ```bash
-skaffold dev
+skaffold run
 ```
 
 </details>
@@ -18,8 +18,19 @@ skaffold dev
 
 1. Build Docker image and Push
 ```bash
-docker build -t bitxon/app-hz-embedded:latest .
-docker push bitxon/app-hz-embedded:latest
+docker build -t bitxon/app-hz-embedded:1 -t bitxon/app-hz-embedded:2 -t bitxon/app-hz-embedded:3 .
+#docker push bitxon/app-hz-embedded:1
+```
+ Update to version 2
+```bash
+kubectl set image deployment/application-deployment application=bitxon/app-hz-embedded:2
+kubectl set image statefulset.apps/application-deployment application=bitxon/app-hz-embedded:2
+
+
+```
+
+```bash
+watch kubectl logs -l app=application | grep 'DESTROY MY_ENTITY'
 ```
 
 2. Deploy to Kubernetes
@@ -63,6 +74,8 @@ curl --request PUT 'http://localhost:8080/fenced-lock-cache/key1/valueB'
 curl --request GET 'http://localhost:8080/fenced-lock-cache/key1'
 # Scale application
 kubectl scale deployment application-deployment --replicas=5
+kubectl set image deployment/application-deployment application=bitxon/app-hz-embedded:2
+kubectl logs -l app=application
 ```
 
 ---

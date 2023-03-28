@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: application-deployment
 spec:
-  replicas: 4
+  serviceName: application-with-hazelcast
+  replicas: 5
   selector:
     matchLabels:
       app: application
@@ -12,9 +13,10 @@ spec:
       labels:
         app: application
     spec:
+      terminationGracePeriodSeconds: 60
       containers:
         - name: application
-          image: bitxon/app-hz-embedded
+          image: bitxon/app-hz-embedded:1
           ports:
             - containerPort: 8080
             - containerPort: 5701
@@ -23,12 +25,12 @@ spec:
             periodSeconds: 5        # first check will be after 10 + 5 = 15, second check 10 + 5 + 5 = 20
             failureThreshold: 8     # last check will be after 10 + (5 * 8) = 50
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: 8080
           livenessProbe:
             initialDelaySeconds: 0
             periodSeconds: 10
-            failureThreshold: 2
+            failureThreshold: 3
             httpGet:
               path: /actuator/health/liveness
               port: 8080

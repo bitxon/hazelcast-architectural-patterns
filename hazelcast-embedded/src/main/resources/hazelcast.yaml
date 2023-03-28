@@ -8,7 +8,7 @@ hazelcast:
         enabled: true
         service-name: hazelcast-service #Refers to k8s service that expose port 5701 to cluster, null == default
   cp-subsystem:
-    cp-member-count: 3
+    cp-member-count: 5
     group-size: 3 #Allowed values [3, 5, 7]
   map:
     default:

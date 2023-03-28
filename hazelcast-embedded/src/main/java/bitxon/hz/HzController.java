@@ -38,9 +38,10 @@ public class HzController {
 
     @SneakyThrows
     @GetMapping("/fenced-lock-cache/{key}")
-    public String getWithLock(@PathVariable("key") String key) {
-        log.info("GET {}", key);
+    public String getWithLock(@PathVariable("key") String key, final Integer a) {
+        log.info("GET '{}'", key);
         var lock = getLock(key);
+        log.warn("" + a);
 
         if (lock.tryLock(6, SECONDS)) {
             log.info("LOCK '{}' read", key);
@@ -58,7 +59,7 @@ public class HzController {
     @SneakyThrows
     @PutMapping("/fenced-lock-cache/{key}/{value}")
     public String putWithLock(@PathVariable("key") String key, @PathVariable("value") String value) {
-        log.info("PUT {}:{}", key, value);
+        log.info("PUT '{}':'{}'", key, value);
         var lock = getLock(key);
 
         if (lock.tryLock(6, SECONDS)) {

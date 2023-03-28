@@ -2,11 +2,6 @@ apiVersion: skaffold/v4beta2
 kind: Config
 metadata:
   name: hazelcast-embedded
-build:
-  artifacts:
-    - image: bitxon/app-hz-embedded
-      docker:
-        dockerfile: Dockerfile
 manifests:
   rawYaml:
     - k8s/hazelcast-rbac.yaml
