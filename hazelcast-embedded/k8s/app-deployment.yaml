@@ -12,6 +12,7 @@ spec:
       labels:
         app: application
     spec:
+      serviceAccountName: hazelcast-service-account
       containers:
         - name: application
           image: bitxon/app-hz-embedded

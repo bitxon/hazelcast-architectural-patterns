@@ -1,14 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
-  name: hazelcast-cluster-role
+  name: hazelcast-role
 rules:
   - apiGroups:
       - ""
     resources:
       - endpoints
       - pods
-      - nodes
       - services
     verbs:
       - get
@@ -16,15 +15,22 @@ rules:
 
 ---
 
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: hazelcast-cluster-role-binding
+  name: hazelcast-service-account
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: hazelcast-role-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: hazelcast-cluster-role
+  kind: Role
+  name: hazelcast-role
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: hazelcast-service-account
     namespace: default
