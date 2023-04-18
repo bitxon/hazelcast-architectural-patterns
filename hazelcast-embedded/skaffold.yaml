@@ -15,6 +15,10 @@ manifests:
     - k8s/app-service.yaml
 portForward:
   - resourceType: service
-    resourceName: application-service
+    resourceName: application-service-blue
     port: 8080
     localPort: 8080
+  - resourceType: service
+    resourceName: application-service-green
+    port: 8080
+    localPort: 8090

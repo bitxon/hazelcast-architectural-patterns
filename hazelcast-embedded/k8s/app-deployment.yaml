@@ -1,16 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: application-deployment
+  name: application-deployment-blue
 spec:
   replicas: 3
   selector:
     matchLabels:
       app: application
+      color: blue
   template:
     metadata:
       labels:
         app: application
+        color: blue
     spec:
       serviceAccountName: hazelcast-service-account
       containers:
@@ -19,3 +21,41 @@ spec:
           ports:
             - containerPort: 8080
             - containerPort: 5701
+          env:
+            - name: DISCOVERY_SERVICE_NAME
+              value: hazelcast-service-blue
+            - name: NAMESPACE
+              value: default
+            - name: CLUSTER_NAME
+              value: hzcluster-blue
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application-deployment-green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: application
+      color: green
+  template:
+    metadata:
+      labels:
+        app: application
+        color: green
+    spec:
+      serviceAccountName: hazelcast-service-account
+      containers:
+        - name: application
+          image: bitxon/app-hz-embedded
+          ports:
+            - containerPort: 8080
+            - containerPort: 5701
+          env:
+            - name: DISCOVERY_SERVICE_NAME
+              value: hazelcast-service-green
+            - name: NAMESPACE
+              value: default
+            - name: CLUSTER_NAME
+              value: hzcluster-green
