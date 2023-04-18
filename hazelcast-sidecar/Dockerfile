@@ -5,7 +5,7 @@ RUN mvn -B dependency:resolve dependency:resolve-plugins
 COPY src/ /app/src/
 RUN mvn -B clean package -DskipTests
 
-FROM openjdk:17.0.1-jdk-slim
+FROM azul/zulu-openjdk-alpine:17.0.6-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar /app/app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
