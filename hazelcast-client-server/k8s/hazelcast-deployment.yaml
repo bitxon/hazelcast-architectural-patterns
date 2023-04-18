@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hazelcast
-          image: hazelcast/hazelcast
+          image: hazelcast/hazelcast:5.2.3
           ports:
             - containerPort: 5701
           env:
