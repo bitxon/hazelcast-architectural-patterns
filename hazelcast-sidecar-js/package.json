@@ -15,10 +15,10 @@
     "hazelcast-client": "^5.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.20.7",
-    "@babel/core": "^7.20.12",
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.21.5",
     "@babel/node": "^7.20.7",
-    "@babel/preset-env": "^7.20.2",
-    "nodemon": "^2.0.20"
+    "@babel/preset-env": "^7.21.5",
+    "nodemon": "^2.0.22"
   }
 }
