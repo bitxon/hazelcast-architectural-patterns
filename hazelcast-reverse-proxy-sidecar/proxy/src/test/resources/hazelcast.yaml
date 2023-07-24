@@ -1,0 +1,4 @@
+hazelcast:
+  map:
+    default:
+      time-to-live-seconds: 20

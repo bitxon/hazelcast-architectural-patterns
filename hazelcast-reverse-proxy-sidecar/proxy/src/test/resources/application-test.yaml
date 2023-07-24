@@ -1,0 +1,7 @@
+target:
+  app:
+    uri: "http://localhost:${wiremock.server.port}"
+
+logging:
+  level:
+    org.springframework.cloud.gateway.handler: DEBUG

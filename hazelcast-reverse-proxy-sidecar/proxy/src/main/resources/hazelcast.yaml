@@ -1,0 +1,12 @@
+hazelcast:
+  cluster-name: hzcluster
+  network:
+    join:
+      multicast:
+        enabled: false
+      kubernetes:
+        enabled: true
+        service-name: hazelcast-service #Refers to k8s service that expose port 5701 to cluster, null == default
+  map:
+    default:
+      time-to-live-seconds: 60

@@ -5,6 +5,7 @@
 - Hazelcast Embedded ( [Java](hazelcast-embedded/) )
 - Hazelcast Sidecar ( [Java](hazelcast-sidecar/) | [JS](hazelcast-sidecar-js/) )
 - Hazelcast Client-Server ( [Java](hazelcast-client-server/) )
+- Hazelcast Reverse-Proxy Sidecar ( [Java](hazelcast-reverse-proxy-sidecar/) )
 
 ## Useful Links
 

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: application
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      containers:
+        - name: proxy
+          image: bitxon/proxy-hz-embedded
+          ports:
+            - containerPort: 8888
+            - containerPort: 5701
+        - name: application
+          image: bitxon/app-hz-none
+          ports:
+            - containerPort: 8080
