@@ -1,0 +1,31 @@
+server:
+  port: 8888
+
+target:
+  app:
+    uri: http://localhost:8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+
+        - id: cache_get
+          uri: ${target.app.uri}
+          predicates:
+            - Method=GET
+            - Path=/{cache}/{key}
+          filters:
+            - name: HzGetCache
+
+        - id: cache_put
+          uri: ${target.app.uri}
+          predicates:
+            - Method=PUT
+            - Path=/{cache}/{key}/{value}
+          filters:
+            - name: HzPutCache
+
+logging:
+  level:
+    org.springframework.cloud.gateway.handler: DEBUG

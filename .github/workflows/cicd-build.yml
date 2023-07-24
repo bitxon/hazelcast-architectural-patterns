@@ -36,3 +36,7 @@ jobs:
       - name: Build hazelcast-client-server
         run: mvn clean verify -B
         working-directory: hazelcast-client-server
+
+      - name: Build hazelcast-reverse-proxy-sidecar
+        run: mvn clean verify -B
+        working-directory: hazelcast-reverse-proxy-sidecar
