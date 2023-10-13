@@ -69,7 +69,7 @@ kubectl scale deployment application-deployment --replicas=5
 
 ---
 ## Useful links
-- [Latest RBAC](https://raw.githubusercontent.com/hazelcast/hazelcast-kubernetes/master/rbac.yaml)
-- [Hazelcast Kubernetes Discovery](https://github.com/hazelcast/hazelcast-kubernetes)
+- [Kubernetes Discovery](https://docs.hazelcast.com/hazelcast/5.2/kubernetes/kubernetes-auto-discovery.adoc)
+- [Latest RBAC](https://raw.githubusercontent.com/hazelcast/hazelcast/master/kubernetes-rbac.yaml)
+- [Example hazelcast-client.yaml](https://github.com/hazelcast/hazelcast/blob/master/hazelcast/src/main/resources/hazelcast-client-full-example.yaml)
 - [How to use System Properties](https://docs.hazelcast.com/hazelcast/5.2/configuration/configuring-with-system-properties)
-- [Full Example of hazelcast-client.yaml](https://github.com/hazelcast/hazelcast/blob/master/hazelcast/src/main/resources/hazelcast-client-full-example.yaml)
