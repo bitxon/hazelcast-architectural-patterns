@@ -26,17 +26,17 @@ jobs:
           distribution: 'adopt'
 
       - name: Build hazelcast-embedded
-        run: mvn clean verify -B
+        run: mvn clean verify -B -Daether.dependencyCollector.impl=bf
         working-directory: hazelcast-embedded
 
       - name: Build hazelcast-sidecar
-        run: mvn clean verify -B
+        run: mvn clean verify -B -Daether.dependencyCollector.impl=bf
         working-directory: hazelcast-sidecar
 
       - name: Build hazelcast-client-server
-        run: mvn clean verify -B
+        run: mvn clean verify -B -Daether.dependencyCollector.impl=bf
         working-directory: hazelcast-client-server
 
       - name: Build hazelcast-reverse-proxy-sidecar
-        run: mvn clean verify -B
+        run: mvn clean verify -B -Daether.dependencyCollector.impl=bf
         working-directory: hazelcast-reverse-proxy-sidecar
